@@ -1,0 +1,14 @@
+spring:
+  profiles:
+    active: ${profile}
+    group:
+      local: "local"
+      dev: "dev, datasource"
+    include:
+      - security
+
+
+cors-allowed-origins:
+  https://example.vercel.app,
+  http://localhost:8080,
+  http://localhost:3000,
