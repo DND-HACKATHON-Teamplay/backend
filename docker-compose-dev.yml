@@ -23,6 +23,7 @@ services:
       - CLIENT_SECRET=${CLIENT_SECRET}
       - IP=${IP}
       - REDIRECT_URL=${REDIRECT_URL}
+      - KAKAO_CLIENT_ID=${KAKAO_CLIENT_ID}
     networks:
       - dnd
 
