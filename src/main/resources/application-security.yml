@@ -17,7 +17,7 @@ spring:
             client-name: google
             client-id: ${CLIENT_ID}
             client-secret: ${CLIENT_SECRET}
-            redirect-uri: http://backya.duckdns.org:8080/login/oauth2/code/google
+            redirect-uri: https://bb-konkuk.shop/login/oauth2/code/google
             authorization-grant-type: authorization_code
             scope:
               - profile
