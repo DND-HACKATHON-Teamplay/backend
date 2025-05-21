@@ -3,10 +3,7 @@ package com.server.dndserver.global.security.service;
 import com.server.dndserver.domain.member.domain.Member;
 import com.server.dndserver.domain.member.domain.MemberRole;
 import com.server.dndserver.domain.member.service.MemberService;
-import com.server.dndserver.global.security.dto.CustomOAuth2User;
-import com.server.dndserver.global.security.dto.GoogleResponse;
-import com.server.dndserver.global.security.dto.MemberDto;
-import com.server.dndserver.global.security.dto.OAuth2Response;
+import com.server.dndserver.global.security.dto.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
@@ -24,27 +21,22 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
 
         OAuth2User oAuth2User = super.loadUser(userRequest);
-        System.out.println(oAuth2User);
-
         String registrationId = userRequest.getClientRegistration().getRegistrationId();
-        OAuth2Response oAuth2Response = null;
 
-        if (registrationId.equals("google")) {
-
-            oAuth2Response = new GoogleResponse(oAuth2User.getAttributes());
-        } else {
-
-            return null;
-        }
+        OAuth2Response oAuth2Response = switch (registrationId) {
+            case "google" -> new GoogleResponse(oAuth2User.getAttributes());
+            case "kakao" -> new KakaoResponse(oAuth2User.getAttributes());
+            default -> throw new OAuth2AuthenticationException("Unsupported provider: " + registrationId);
+        };
 
         Member member = memberService.createMemberByOAuthInfo(oAuth2Response);
 
         MemberDto memberDto = new MemberDto();
         memberDto.setUsername(member.getId().toString());
         memberDto.setName(oAuth2Response.getName());
+        memberDto.setEmail(oAuth2Response.getEmail());
         memberDto.setRole(MemberRole.USER.getValue());
 
         return new CustomOAuth2User(memberDto);
-
     }
 }
