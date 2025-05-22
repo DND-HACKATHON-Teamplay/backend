@@ -1,5 +1,6 @@
 package com.server.dndserver.global.config;
 
+import com.server.dndserver.domain.member.service.LogoutService;
 import com.server.dndserver.global.security.JwtTokenProvider;
 import com.server.dndserver.global.security.oauth2.CustomSuccessHandler;
 import com.server.dndserver.global.security.service.CustomOAuth2UserService;
@@ -8,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
@@ -15,6 +17,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.HttpStatusEntryPoint;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
@@ -31,6 +34,7 @@ public class SecurityConfig {
     private final CustomSuccessHandler customSuccessHandler;
     private final JwtTokenProvider jwtTokenProvider;
     private final AuthenticationConfiguration authenticationConfiguration;
+    private final LogoutService logoutService;
 
     @Value("${cors-allowed-origins}")
     private List<String> corsAllowedOrigins;
@@ -65,9 +69,15 @@ public class SecurityConfig {
         http
                 .cors(customizer -> customizer.configurationSource(corsConfigurationSource()));
 
+        // 리다이렉트 대신 401 추가
+        http
+            .exceptionHandling(e -> e
+                .authenticationEntryPoint(
+                        new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED)));
+
         //JWTFilter 추가
         http
-                .addFilterBefore(new JwtAuthenticationFilter(authenticationManager(authenticationConfiguration)), UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(new JwtAuthenticationFilter(authenticationManager(authenticationConfiguration), logoutService), UsernamePasswordAuthenticationFilter.class);
 
         //oauth2
         http

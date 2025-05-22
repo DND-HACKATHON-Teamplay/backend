@@ -59,6 +59,29 @@ public class JwtUtil {
                 .getBody();
     }
 
+    public boolean validateToken(String token) {
+        try {
+            Jwts.parserBuilder()
+                    .setSigningKey(getAccessTokenKey())
+                    .requireIssuer(jwtProperties.issuer())
+                    .build()
+                    .parseClaimsJws(token);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    public long getTokenRemainingTime(String token) {
+        Claims claims = Jwts.parserBuilder()
+                .setSigningKey(getAccessTokenKey())
+                .requireIssuer(jwtProperties.issuer())
+                .build()
+                .parseClaimsJws(token)
+                .getBody();
+        return claims.getExpiration().getTime() - System.currentTimeMillis();
+    }
+
     private Key getAccessTokenKey() {
         return Keys.hmacShaKeyFor(jwtProperties.accessTokenSecret().getBytes());
     }
@@ -66,4 +89,6 @@ public class JwtUtil {
     private Key getRefreshTokenKey() {
         return Keys.hmacShaKeyFor(jwtProperties.refreshTokenSecret().getBytes());
     }
+
+
 }
