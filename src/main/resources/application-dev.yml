@@ -5,6 +5,10 @@ spring:
   jpa:
     hibernate:
       ddl-auto: update
+  data:
+    redis:
+      host: ${REDIS_NAME}
+      port: 6379
 
 logging:
   level:
@@ -24,5 +28,7 @@ management:
       enabled: true
 
 cors-allowed-origins:
+  https://team-play.netlify.app,
   http://localhost:8080,
   http://localhost:3000,
+

@@ -9,6 +9,6 @@ spring:
 
 
 cors-allowed-origins:
-  https://example.vercel.app,
+  https://team-play.netlify.app,
   http://localhost:8080,
   http://localhost:3000,

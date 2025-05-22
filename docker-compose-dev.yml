@@ -24,6 +24,7 @@ services:
       - IP=${IP}
       - REDIRECT_URL=${REDIRECT_URL}
       - KAKAO_CLIENT_ID=${KAKAO_CLIENT_ID}
+      - REDIS_NAME=${REDIS_NAME}
     networks:
       - dnd
 
