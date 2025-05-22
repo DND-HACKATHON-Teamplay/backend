@@ -6,6 +6,7 @@ spring:
       dev: "dev, datasource"
     include:
       - security
+      - openai
 
 
 cors-allowed-origins:
