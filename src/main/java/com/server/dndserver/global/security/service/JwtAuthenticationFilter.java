@@ -1,5 +1,6 @@
 package com.server.dndserver.global.security.service;
 
+import com.server.dndserver.domain.member.service.LogoutService;
 import com.server.dndserver.global.security.token.JwtAuthenticationToken;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -21,6 +22,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     public static final String TOKEN_PREFIX = "Bearer ";
 
     private final AuthenticationManager authenticationManager;
+    private final LogoutService logoutService;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
@@ -28,8 +30,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         String accessToken = extractAccessTokenFromHeader(request);
 
-        if(accessToken == null) {
+        if (accessToken == null) {
             filterChain.doFilter(request, response);
+            return;
+        }
+
+        if (logoutService.isLoggedOut(accessToken)) {
+            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "이미 로그아웃된 토큰입니다.");
             return;
         }
 
@@ -41,7 +48,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         filterChain.doFilter(request, response);
     }
-
 
     private String extractAccessTokenFromHeader(HttpServletRequest request) {
         return Optional.ofNullable(request.getHeader("Authorization"))
