@@ -19,6 +19,7 @@ public class Conversation extends BaseEntity {
     private String content;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "call_id")
     private Call call;
 
     private boolean isElderly;

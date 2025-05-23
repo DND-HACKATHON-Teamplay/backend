@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.server.dndserver.domain.call.domain.Call;
 import com.server.dndserver.domain.call.dto.CallRequestDTO;
 import com.server.dndserver.domain.call.dto.CallResponseDTO;
+import com.server.dndserver.domain.call.dto.CallStatusDTO;
 import com.server.dndserver.domain.call.service.CallService;
 import com.server.dndserver.domain.member.domain.Member;
 import com.server.dndserver.global.annotation.AuthUser;
@@ -47,7 +48,7 @@ public class CallController {
     @GetMapping("/daily")
     @Tag(name = "전화 API")
     @Operation(summary = "어르신의 날마다의 상태를 반환합니다. JWT accessToken이 필요합니다.")
-    public Call getDailyCall(
+    public CallStatusDTO getDailyCall(
             @AuthUser Member member,
             @RequestParam
             @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {

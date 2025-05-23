@@ -8,6 +8,7 @@ import com.server.dndserver.domain.call.domain.HealthStatus;
 import com.server.dndserver.domain.call.domain.MindStatus;
 import com.server.dndserver.domain.call.dto.CallRequestDTO;
 import com.server.dndserver.domain.call.dto.CallResponseDTO;
+import com.server.dndserver.domain.call.dto.CallStatusDTO;
 import com.server.dndserver.domain.call.dto.ConversationDTO;
 import com.server.dndserver.domain.call.repository.CallRepository;
 import com.server.dndserver.domain.chatgpt.dto.Message;
@@ -137,16 +138,22 @@ public class CallService {
     }
 
 
-    public Call getDailyCall(Long memberId, LocalDate date) {
+    public CallStatusDTO getDailyCall(Long memberId, LocalDate date) {
         Elderly elderly = elderlyRepository.findByMemberId(memberId)
                 .orElseThrow(() -> new BusinessException(ErrorCode.NOT_ELDERLY_PERSONNEL));
 
         LocalDateTime start = date.atStartOfDay();
         LocalDateTime end   = date.plusDays(1).atStartOfDay().minusNanos(1);
 
-        return callRepository
+        Call call = callRepository
                 .findFirstByElderlyIdAndCreatedDateBetweenOrderByCreatedDateDesc(elderly.getId(), start, end)
                 .orElseThrow(() -> new EntityNotFoundException("해당 날짜 통화 기록 없음"));
+
+        return new CallStatusDTO(
+                call.getHealthStatus(),
+                call.getSleepTime(),
+                call.getMindStatus()
+        );
     }
 
     private String joinElderlyContents(CallRequestDTO dto) {
