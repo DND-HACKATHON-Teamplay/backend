@@ -27,6 +27,8 @@ public class ElderlyService {
                 .member(member)
                 .build();
 
+        member.completeFirstLogin();
+
         return elderlyRepository.save(elderly);
     }
 }

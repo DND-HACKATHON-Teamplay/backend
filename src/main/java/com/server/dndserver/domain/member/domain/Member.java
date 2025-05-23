@@ -24,11 +24,14 @@ public class Member extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private MemberRole role;
 
+    private boolean isFirstLogin;
+
     @Builder
-    public Member(String name, MemberRole role, String email) {
+    public Member(String name, MemberRole role, String email, boolean isFirstLogin) {
         this.name = name;
         this.role = role;
         this.email = email;
+        this.isFirstLogin = isFirstLogin;
     }
 
     public static Member createDefaultMember(String name, MemberRole role, String email) {
@@ -36,6 +39,11 @@ public class Member extends BaseEntity {
                 .name(name)
                 .role(role)
                 .email(email)
+                .isFirstLogin(true)
                 .build();
+    }
+
+    public void completeFirstLogin() {
+        this.isFirstLogin = false;
     }
 }
