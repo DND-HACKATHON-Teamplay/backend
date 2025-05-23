@@ -36,7 +36,7 @@ public class ConversationService {
         );
 
         if (conversations.isEmpty()) {
-            throw new EntityNotFoundException("해당 날짜에 대화 기록이 없습니다.");
+            throw new BusinessException(ErrorCode.NOT_FOUND_CONVERSATION);
         }
 
         return conversations.stream()

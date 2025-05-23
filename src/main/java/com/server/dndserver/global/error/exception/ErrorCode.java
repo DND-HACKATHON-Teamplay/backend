@@ -28,7 +28,11 @@ public enum ErrorCode {
 
     //회원
     MEMBER_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 회원을 찾을 수 없습니다"),
-    GPT_EMPTY_RESPONSE(HttpStatus.BAD_REQUEST, "GPT RESPONSE가 NULL입니다." );
+    GPT_EMPTY_RESPONSE(HttpStatus.BAD_REQUEST, "GPT RESPONSE가 NULL입니다." ),
+
+    //대화
+    NOT_FOUND_CONVERSATION(HttpStatus.NOT_FOUND, "대화가 존재하지 않습니다")
+    ;
 
     private final HttpStatus status;
     private final String message;
