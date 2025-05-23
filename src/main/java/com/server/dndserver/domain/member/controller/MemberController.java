@@ -9,6 +9,8 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -24,5 +26,12 @@ public class MemberController {
     public ResponseEntity<Void> deleteMember(@AuthUser Member member) {
         memberService.deleteMember(member);
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping
+    @Tag(name = "유저 API")
+    @Operation(summary = "최초 로그인 여부를 반환합니다. 요청 헤더에 포함된 JWT Access Token이 필요합니다.")
+    public ResponseEntity<Boolean> isFirstLogin(@AuthUser Member member) {
+        return ResponseEntity.ok(member.isFirstLogin());
     }
 }
