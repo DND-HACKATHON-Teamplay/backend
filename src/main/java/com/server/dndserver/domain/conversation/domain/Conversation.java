@@ -3,13 +3,13 @@ package com.server.dndserver.domain.conversation.domain;
 import com.server.dndserver.domain.call.domain.Call;
 import com.server.dndserver.global.common.BaseEntity;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Getter
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Builder
+@AllArgsConstructor
 public class Conversation extends BaseEntity {
 
     @Id
@@ -22,4 +22,13 @@ public class Conversation extends BaseEntity {
     private Call call;
 
     private boolean isElderly;
+
+    public Conversation(String content, boolean elderly) {
+        this.content = content;
+        this.isElderly = elderly;
+    }
+
+    public void setCall(Call call) {
+        this.call = call;
+    }
 }

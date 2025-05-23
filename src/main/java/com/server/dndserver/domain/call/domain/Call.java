@@ -1,15 +1,19 @@
 package com.server.dndserver.domain.call.domain;
 
+import com.server.dndserver.domain.conversation.domain.Conversation;
 import com.server.dndserver.domain.elderly.domain.Elderly;
 import com.server.dndserver.global.common.BaseEntity;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Entity
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class Call extends BaseEntity {
 
     @Id
@@ -26,4 +30,14 @@ public class Call extends BaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     private Elderly elderly;
+
+    @OneToMany(mappedBy = "call",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true)
+    private final List<Conversation> conversations = new ArrayList<>();
+
+    public void addConversation(Conversation conv) {
+        conversations.add(conv);
+        conv.setCall(this);
+    }
 }
