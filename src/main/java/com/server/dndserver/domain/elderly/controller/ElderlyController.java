@@ -9,10 +9,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
 
@@ -35,5 +32,11 @@ public class ElderlyController {
         Elderly elderly = elderlyService.registerElderly(member, request);
 
         return ResponseEntity.ok(Map.of("elderlyId", elderly.getId()));
+    }
+
+    @PatchMapping
+    public ResponseEntity<Object> updateElderly(@AuthUser Member member, @RequestBody ElderlyRegisterRequest request){
+        elderlyService.updateElderly(member, request);
+        return ResponseEntity.ok("어르신 정보 수정에 성공했습니다.");
     }
 }
