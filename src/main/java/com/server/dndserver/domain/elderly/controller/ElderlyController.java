@@ -25,7 +25,7 @@ public class ElderlyController {
 
     @PostMapping
     @Tag(name ="어르신 API")
-    @Operation(summary = "어르신의 정보를 생성합니다, JWT accessToken이 필요합니다.")
+    @Operation(summary = "어르신의 정보를 생성합니다, 요청 헤더에 포함된 JWT accessToken이 필요합니다.")
     public ResponseEntity<?> registerElderly(
             @AuthUser Member member, @RequestBody ElderlyRegisterRequest request) {
 
@@ -36,7 +36,7 @@ public class ElderlyController {
 
     @GetMapping
     @Tag(name ="어르신 API")
-    @Operation(summary = "어르신의 정보를 받아옵니다. JWT accessToken이 필요합니다.")
+    @Operation(summary = "어르신의 정보를 받아옵니다. 요청 헤더에 포함된 JWT accessToken이 필요합니다.")
     public ResponseEntity<?> getElderly(@AuthUser Member member) {
         return ResponseEntity.ok(elderlyService.getElderlyById(member.getId()));
     }
