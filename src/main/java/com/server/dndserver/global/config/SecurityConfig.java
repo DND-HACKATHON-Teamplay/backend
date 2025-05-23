@@ -39,7 +39,7 @@ public class SecurityConfig {
     @Value("${cors-allowed-origins}")
     private List<String> corsAllowedOrigins;
 
-    private String[] allowUrls = {"/", "/favicon.ico", "/swagger-ui/**", "/v3/**", "/auth/**", "/oauth2/**","/h2-console/**"};
+    private String[] allowUrls = {"/", "/favicon.ico", "/swagger-ui/**", "/v3/**", "/auth/**", "/oauth2/**","/h2-console/**", "/api/v1/chatgpt/**"};
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
