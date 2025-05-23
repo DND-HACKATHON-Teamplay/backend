@@ -3,10 +3,13 @@ package com.server.dndserver.domain.call.dto;
 import com.server.dndserver.domain.call.domain.Call;
 import com.server.dndserver.domain.call.domain.HealthStatus;
 import com.server.dndserver.domain.call.domain.MindStatus;
+import com.server.dndserver.domain.conversation.domain.Conversation;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import java.util.List;
 
 @Builder
 @Getter
@@ -17,12 +20,14 @@ public class SummaryDTO{
     private Long sleepHours;
     private HealthStatus healthStatus;
     private String summary;
+    private List<Conversation> content;
 
-    public static SummaryDTO createFromCall(Call call){
+    public static SummaryDTO createFromCallAndConversationList(Call call, List<Conversation> conversations){
         return SummaryDTO.builder()
                 .mindStatus(call.getMindStatus())
                 .sleepHours(call.getSleepTime())
                 .healthStatus(call.getHealthStatus())
+                .content(conversations)
                 .build();
     }
 }
