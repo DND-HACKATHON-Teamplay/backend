@@ -26,7 +26,6 @@ public enum ErrorCode {
     // 어르신
     NOT_ELDERLY_PERSONNEL(HttpStatus.BAD_REQUEST, "어르신이 존재하지 않습니다."),
 
-
     //회원
     MEMBER_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 회원을 찾을 수 없습니다"),
     GPT_EMPTY_RESPONSE(HttpStatus.BAD_REQUEST, "GPT RESPONSE가 NULL입니다." );
