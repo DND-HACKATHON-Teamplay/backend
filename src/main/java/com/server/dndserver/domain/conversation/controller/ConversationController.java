@@ -1,5 +1,6 @@
 package com.server.dndserver.domain.conversation.controller;
 
+import com.server.dndserver.domain.call.dto.ConversationDTO;
 import com.server.dndserver.domain.conversation.domain.Conversation;
 import com.server.dndserver.domain.conversation.service.ConversationService;
 import com.server.dndserver.domain.member.domain.Member;
