@@ -21,7 +21,7 @@ public class SummaryController {
     private final SummaryService summaryService;
     @PostMapping("{callId}/summary")
     @Tag(name ="요약 조회 API")
-    @Operation(summary = "디테일 뷰에서 대화 내용 요약과 전체 대화를 조회하는 API. JWT 토큰이 필요합니다.")
+    @Operation(summary = "디테일 뷰에서 대화 내용 요약과 전체 대화를 조회합니다. 요청 헤더에 포함된 JWT accessToken이 필요합니다.")
     public ResponseEntity<Object> getSummary(@RequestParam Long conversationId){
         SummaryDTO summaryDTO = summaryService.getSummary(conversationId);
         return ResponseEntity.ok(summaryDTO);

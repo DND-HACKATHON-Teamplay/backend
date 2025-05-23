@@ -22,7 +22,7 @@ public class ChatGptController {
     private final ChatGptService chatGptService;
 
     @PostMapping("prompt")
-    @Tag(name = "GPT API")
+    @Tag(name = "지피티 API")
     @Operation(summary = "챗지피티 API")
     public ResponseEntity<Map<String, Object>> prompt(@RequestBody RequestPromptDTO request){
         log.info("[prompt] request.prompt = " + request.getMessages().get(0).getContent());

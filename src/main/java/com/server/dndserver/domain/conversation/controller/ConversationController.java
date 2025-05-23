@@ -26,7 +26,7 @@ public class ConversationController {
 
     @GetMapping("/by-call-date")
     @Tag(name = "대화 API")
-    @Operation(summary = "날짜별 대화를 가져옵니다. JWT accessToken이 필요합니다.")
+    @Operation(summary = "날짜별 대화를 가져옵니다. 요청 헤더에 포함된 JWT accessToken이 필요합니다.")
     public ResponseEntity<List<Conversation>> getConversationsByCallDate(
             @AuthUser Member member,
             @RequestParam("date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
