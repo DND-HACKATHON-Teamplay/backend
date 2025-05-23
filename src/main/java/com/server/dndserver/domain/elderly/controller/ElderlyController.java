@@ -23,7 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class ElderlyController {
     private final ElderlyService elderlyService;
 
-    @PostMapping
+    @PostMapping("/create")
     @Tag(name ="어르신 API")
     @Operation(summary = "어르신의 정보를 생성합니다, 요청 헤더에 포함된 JWT accessToken이 필요합니다.")
     public ResponseEntity<?> registerElderly(
