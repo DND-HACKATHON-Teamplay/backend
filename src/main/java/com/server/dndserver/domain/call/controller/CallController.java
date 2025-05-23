@@ -53,6 +53,6 @@ public class CallController {
             @RequestParam
             @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
 
-        return callService.getDailyCall(member.getId(), date);
+        return callService.getDailyCall(member, date);
     }
 }

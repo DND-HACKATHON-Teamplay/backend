@@ -17,6 +17,7 @@ import com.server.dndserver.domain.chatgpt.service.ChatGptService;
 import com.server.dndserver.domain.conversation.domain.Conversation;
 import com.server.dndserver.domain.elderly.domain.Elderly;
 import com.server.dndserver.domain.elderly.repository.ElderlyRepository;
+import com.server.dndserver.domain.member.domain.Member;
 import com.server.dndserver.global.error.exception.BusinessException;
 import com.server.dndserver.global.error.exception.ErrorCode;
 import jakarta.persistence.EntityNotFoundException;
@@ -138,8 +139,8 @@ public class CallService {
     }
 
 
-    public CallStatusDTO getDailyCall(Long memberId, LocalDate date) {
-        Elderly elderly = elderlyRepository.findByMemberId(memberId)
+    public CallStatusDTO getDailyCall(Member member, LocalDate date) {
+        Elderly elderly = elderlyRepository.findByMemberId(member.getId())
                 .orElseThrow(() -> new BusinessException(ErrorCode.NOT_ELDERLY_PERSONNEL));
 
         LocalDateTime start = date.atStartOfDay();
