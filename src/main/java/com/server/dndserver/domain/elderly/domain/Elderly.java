@@ -7,6 +7,8 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
+
 @Getter
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -16,6 +18,10 @@ public class Elderly extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    private String name;
+
+    private LocalDate birthDate;
+
     private String phoneNumber;
 
     @Enumerated(EnumType.STRING)
@@ -23,4 +29,7 @@ public class Elderly extends BaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     private Member member;
+
+    @Enumerated(EnumType.STRING)
+    private Relationship relationshipWithGuardian;
 }
