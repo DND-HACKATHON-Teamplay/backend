@@ -148,7 +148,11 @@ public class CallService {
 
         Call call = callRepository
                 .findFirstByElderlyIdAndCreatedDateBetweenOrderByCreatedDateDesc(elderly.getId(), start, end)
-                .orElseThrow(() -> new EntityNotFoundException("해당 날짜 통화 기록 없음"));
+                .orElse(null);
+
+        if (call == null) {
+            return null; // 또는 ResponseEntity.noContent()로 처리 가능
+        }
 
         return new CallStatusDTO(
                 call.getHealthStatus(),
