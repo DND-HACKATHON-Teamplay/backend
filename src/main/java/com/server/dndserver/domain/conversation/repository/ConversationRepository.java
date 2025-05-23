@@ -22,6 +22,4 @@ public interface ConversationRepository extends JpaRepository<Conversation, Long
     List<Conversation> findByMemberIdAndCallDate(
             @Param("memberId") Long memberId,
             @Param("date") LocalDate date);
-
-    List<Conversation> findByCallId(Long callId);
 }
