@@ -1,4 +1,8 @@
 package com.server.dndserver.domain.call.dto;
 
-public record CallResponseDTO(Long id) {
+import com.server.dndserver.domain.call.domain.HealthStatus;
+import com.server.dndserver.domain.call.domain.MindStatus;
+import org.springframework.http.HttpStatus;
+
+public record CallResponseDTO(Long id, HealthStatus healthStatus, MindStatus status, Long sleepHours) {
 }
