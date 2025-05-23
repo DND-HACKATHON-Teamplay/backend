@@ -1,4 +1,4 @@
-package com.server.dndserver.domain.elderly.domain.repository;
+package com.server.dndserver.domain.elderly.repository;
 
 import com.server.dndserver.domain.elderly.domain.Elderly;
 import org.springframework.data.jpa.repository.JpaRepository;
