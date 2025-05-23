@@ -37,7 +37,7 @@ public class ElderlyService {
 
     @Transactional(readOnly = true)
     public ElderlyResponse getElderlyById(Long id) {
-        Elderly elderly = elderlyRepository.findById(id).orElseThrow(() -> new BusinessException(ErrorCode.NOT_ELDERLY_PERSONNEL));
+        Elderly elderly = elderlyRepository.findByMemberId(id).orElseThrow(() -> new BusinessException(ErrorCode.NOT_ELDERLY_PERSONNEL));
         return new ElderlyResponse(elderly.getId(), elderly.getName(), elderly.getBirthDate(), elderly.getPhoneNumber(), elderly.getGender(), elderly.getMember().getId(), elderly.getRelationshipWithGuardian(), elderly.getTimeToCall());
     }
 }

@@ -55,5 +55,4 @@ public class CallController {
 
         return callService.getDailyCall(member.getId(), date);
     }
-
 }
