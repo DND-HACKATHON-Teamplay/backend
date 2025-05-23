@@ -30,7 +30,6 @@ public class Elderly extends BaseEntity {
     private Gender gender;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "member_id")
     private Member member;
 
     @Enumerated(EnumType.STRING)
