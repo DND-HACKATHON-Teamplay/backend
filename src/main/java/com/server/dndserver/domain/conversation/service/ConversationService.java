@@ -3,11 +3,17 @@ package com.server.dndserver.domain.conversation.service;
 import com.server.dndserver.domain.call.dto.ConversationDTO;
 import com.server.dndserver.domain.conversation.domain.Conversation;
 import com.server.dndserver.domain.conversation.repository.ConversationRepository;
+import com.server.dndserver.domain.elderly.domain.Elderly;
+import com.server.dndserver.domain.elderly.repository.ElderlyRepository;
 import com.server.dndserver.domain.member.domain.Member;
+import com.server.dndserver.global.error.exception.BusinessException;
+import com.server.dndserver.global.error.exception.ErrorCode;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -16,13 +22,25 @@ import java.util.stream.Collectors;
 public class ConversationService {
 
     private final ConversationRepository conversationRepository;
+    private final ElderlyRepository elderlyRepository;
 
     public List<ConversationDTO> getConversationsByCallDate(Member member, LocalDate date) {
-        List<Conversation> conversations = conversationRepository.findByMemberIdAndCallDate(member.getId(), date);
+        Elderly elderly = elderlyRepository.findByMemberId(member.getId())
+                .orElseThrow(() -> new BusinessException(ErrorCode.NOT_ELDERLY_PERSONNEL));
 
-        List<ConversationDTO> result = conversations.stream()
+        LocalDateTime start = date.atStartOfDay();
+        LocalDateTime end = date.plusDays(1).atStartOfDay().minusNanos(1);
+
+        List<Conversation> conversations = conversationRepository.findByElderlyIdAndCallDate(
+                elderly.getId(), start, end
+        );
+
+        if (conversations.isEmpty()) {
+            throw new EntityNotFoundException("해당 날짜에 대화 기록이 없습니다.");
+        }
+
+        return conversations.stream()
                 .map(ConversationDTO::entityToDto)
                 .collect(Collectors.toList());
-        return result;
     }
 }

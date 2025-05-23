@@ -8,20 +8,23 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Repository
 public interface ConversationRepository extends JpaRepository<Conversation, Long> {
     @Query("""
-            SELECT conv FROM Conversation conv
-            JOIN conv.call call
-            JOIN call.elderly elderly
-            WHERE elderly.member.id = :memberId
-              AND DATE(call.createdDate) = :date
-            """)
-    List<Conversation> findByMemberIdAndCallDate(
-            @Param("memberId") Long memberId,
-            @Param("date") LocalDate date);
+        SELECT c FROM Conversation c
+        JOIN c.call call
+        WHERE call.elderly.id = :elderlyId
+          AND call.createdDate BETWEEN :start AND :end
+        ORDER BY c.createdDate ASC
+    """)
+    List<Conversation> findByElderlyIdAndCallDate(
+            @Param("elderlyId") Long elderlyId,
+            @Param("start") LocalDateTime start,
+            @Param("end") LocalDateTime end
+    );
 
     List<Conversation> findByCallId(Long id);
 }
