@@ -32,6 +32,11 @@ public class MemberService {
         return memberRepository.save(member);
     }
 
+    @Transactional
+    public void deleteMember(Member member) {
+        memberRepository.delete(member);
+    }
+
     private Member getMemberByEmail(String email) {
         return memberRepository.findByEmail(email)
                 .orElseThrow(() -> new NotFoundException(ErrorCode.MEMBER_NOT_FOUND));
