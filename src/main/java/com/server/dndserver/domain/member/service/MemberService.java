@@ -1,5 +1,7 @@
 package com.server.dndserver.domain.member.service;
 
+import com.server.dndserver.domain.elderly.repository.ElderlyRepository;
+import com.server.dndserver.domain.elderly.service.ElderlyService;
 import com.server.dndserver.domain.member.domain.Member;
 import com.server.dndserver.domain.member.domain.MemberRole;
 import com.server.dndserver.domain.member.repository.MemberRepository;
@@ -14,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class MemberService {
     private final MemberRepository memberRepository;
+    private final ElderlyRepository elderlyRepository;
 
     @Transactional(readOnly = true)
     public Member getMemberById(Long id) {
@@ -34,6 +37,7 @@ public class MemberService {
 
     @Transactional
     public void deleteMember(Member member) {
+        elderlyRepository.deleteAllByMember(member);
         memberRepository.delete(member);
     }
 
