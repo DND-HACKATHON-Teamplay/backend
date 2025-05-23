@@ -58,28 +58,29 @@ public class CallService {
     @Transactional
     public CallResponseDTO saveCall(CallRequestDTO content) throws JsonProcessingException {
 
-        Optional<Elderly> byPhoneNumber = elderlyRepository.findByPhoneNumber("01094601439");
+        Elderly elderly = elderlyRepository.findByPhoneNumber("01094601439")
+                .orElseThrow(() -> new BusinessException(ErrorCode.NOT_ELDERLY_PERSONNEL));
+
         Call call = Call.builder()
-                .elderly(byPhoneNumber.orElseThrow(() -> new BusinessException(ErrorCode.NOT_ELDERLY_PERSONNEL)))
+                .elderly(elderly)
                 .build();
 
         content.content().forEach(c ->
                 call.addConversation(new Conversation(c.conversation(), c.is_elderly()))
         );
-        Call saved = callRepository.saveAndFlush(call);   // 영속 상태가 됨
+        Call saved = callRepository.save(call);      // save-only → flush 는 커밋 시 자동
 
+        /* 1. GPT 프롬프트 구성 -------------------------------------------------- */
         String messages = joinElderlyContents(content);
 
         List<Message> messageList = List.of(
                 Message.builder()
                         .role("system")
                         .content("""
-                            다음 대화에서 어르신의 상태를
-                            "healthStatus": "HAPPY|NORMAL|BAD",
-                            "sleepTime": 7,
-                            "mindStatus": "HAPPY|NORMAL|BAD"
-                            형식의 JSON만 응답해줘.
-                            """)
+                        절대 아무 말도 하지 말고, 다음 대화에서 어르신의 상태를
+                        {"healthStatus":"HAPPY|NORMAL|BAD","sleepTime":7,"mindStatus":"HAPPY|NORMAL|BAD"}
+                        형식의 JSON 한 줄만 응답해줘.
+                        """)
                         .build(),
                 Message.builder()
                         .role("user")
@@ -87,52 +88,64 @@ public class CallService {
                         .build()
         );
 
-        log.info("messageList = " + messages);
-
-
         RequestPromptDTO gptReq = RequestPromptDTO.builder()
-                .model("gpt-4")
+                .model("gpt-4o-mini")          // 가능한 최신·저가 모델로
                 .messages(messageList)
-                .temperature(1)
+                .temperature(1)              // JSON 출력 안정화
                 .max_tokens(50)
                 .build();
 
-        /* 2. GPT 호출 */
+        /* 2. GPT 호출 ----------------------------------------------------------- */
         Map<String, Object> gptRes = chatGptService.prompt(gptReq);
 
-        /* 3. choices[0].message.conversation 에서 JSON 파싱 */
+        /* 3. GPT 응답에서 JSON만 추출 ------------------------------------------- */
         String raw = Optional.ofNullable(gptRes.get("choices"))
                 .map(List.class::cast)
                 .filter(list -> !list.isEmpty())
                 .map(list -> (Map<?, ?>) list.get(0))
                 .map(map -> (Map<?, ?>) map.get("message"))
-                .map(msg -> (String) msg.get("content"))   // ★ content 로 변경
-                .orElseThrow(() -> new IllegalStateException("GPT 응답 형식 오류"))
+                .map(msg -> (String) msg.get("content"))
+                .orElseThrow(() -> new BusinessException(ErrorCode.GPT_EMPTY_RESPONSE))
                 .trim();
 
-        String json = raw.replaceAll("```[\\s\\S]*?```", "")
-                .replaceAll("(?i)^json\\s*\\{", "{") // "json{" → "{"
-                .trim();
+        // === 여기부터 교체된 부분 =============================================
+        int left  = raw.indexOf('{');
+        int right = raw.lastIndexOf('}');
+        if (left == -1 || right == -1 || left >= right) {
+            log.error("GPT 원문 = {}", raw);
+            throw new BusinessException(ErrorCode.GPT_EMPTY_RESPONSE);
+        }
+        String json = raw.substring(left, right + 1);
 
         ObjectMapper mapper = new ObjectMapper();
-        JsonNode node = mapper.readTree(json);
+        JsonNode node;
+        try {
+            node = mapper.readTree(json);
+        } catch (JsonProcessingException e) {
+            log.error("GPT JSON 파싱 실패, 원문 = {}", json);
+            throw new BusinessException(ErrorCode.GPT_EMPTY_RESPONSE);
+        }
+        // ======================================================================
 
-        /* 4. 값 매핑 → 엔티티 세팅 */
-        HealthStatus hs   = HealthStatus.valueOf(node.get("healthStatus").asText());
-        Long          slp  = node.get("sleepTime").asLong();
-        MindStatus   mind = MindStatus.valueOf(node.get("mindStatus").asText());
+        /* 4. 값 매핑 → 엔티티 업데이트 ------------------------------------------ */
+        HealthStatus hs  = HealthStatus.valueOf(node.get("healthStatus").asText());
+        long         slp = node.get("sleepTime").asLong();
+        MindStatus   md  = MindStatus.valueOf(node.get("mindStatus").asText());
 
-        saved.updateStatus(hs, slp, mind);
-        return new CallResponseDTO(saved.getId(), hs, mind, slp);
+        saved.updateStatus(hs, slp, md);
+        return new CallResponseDTO(saved.getId(), hs, md, slp);
     }
 
-    public Call getDailyCall(Long elderlyId, LocalDate date) {
+
+    public Call getDailyCall(Long memberId, LocalDate date) {
+        Elderly elderly = elderlyRepository.findByMemberId(memberId)
+                .orElseThrow(() -> new BusinessException(ErrorCode.NOT_ELDERLY_PERSONNEL));
 
         LocalDateTime start = date.atStartOfDay();
         LocalDateTime end   = date.plusDays(1).atStartOfDay().minusNanos(1);
 
         return callRepository
-                .findFirstByElderlyIdAndCreatedDateBetweenOrderByCreatedDateDesc(elderlyId, start, end)
+                .findFirstByElderlyIdAndCreatedDateBetweenOrderByCreatedDateDesc(elderly.getId(), start, end)
                 .orElseThrow(() -> new EntityNotFoundException("해당 날짜 통화 기록 없음"));
     }
 
