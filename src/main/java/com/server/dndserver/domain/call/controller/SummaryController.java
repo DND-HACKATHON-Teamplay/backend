@@ -26,4 +26,6 @@ public class SummaryController {
         SummaryDTO summaryDTO = summaryService.getSummary(conversationId);
         return ResponseEntity.ok(summaryDTO);
     }
+
+
 }

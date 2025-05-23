@@ -18,12 +18,14 @@ import com.server.dndserver.domain.elderly.domain.Elderly;
 import com.server.dndserver.domain.elderly.repository.ElderlyRepository;
 import com.server.dndserver.global.error.exception.BusinessException;
 import com.server.dndserver.global.error.exception.ErrorCode;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -122,6 +124,16 @@ public class CallService {
 
         saved.updateStatus(hs, slp, mind);
         return new CallResponseDTO(saved.getId(), hs, mind, slp);
+    }
+
+    public Call getDailyCall(Long elderlyId, LocalDate date) {
+
+        LocalDateTime start = date.atStartOfDay();
+        LocalDateTime end   = date.plusDays(1).atStartOfDay().minusNanos(1);
+
+        return callRepository
+                .findFirstByElderlyIdAndCreatedDateBetweenOrderByCreatedDateDesc(elderlyId, start, end)
+                .orElseThrow(() -> new EntityNotFoundException("해당 날짜 통화 기록 없음"));
     }
 
     private String joinElderlyContents(CallRequestDTO dto) {
