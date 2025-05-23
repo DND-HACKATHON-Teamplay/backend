@@ -24,6 +24,7 @@ public class ElderlyService {
                 .phoneNumber(request.phoneNumber())
                 .relationshipWithGuardian(request.relationship())
                 .member(member)
+                .timeToCall(request.timeToCall())
                 .build();
 
         member.completeFirstLogin();
