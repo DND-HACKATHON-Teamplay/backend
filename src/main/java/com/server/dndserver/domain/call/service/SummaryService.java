@@ -11,7 +11,8 @@ import org.springframework.stereotype.Service;
 public class SummaryService {
     private final CallRepository callRepository;
     public SummaryDTO getSummary(Long callId) {
-        Call call = callRepository.findById(callId).orElseThrow(() -> new IllegalArgumentException(""));
+        Call call = callRepository.findById(callId).orElseThrow(() -> new IllegalArgumentException("전화 조회 실패"));
+
         return SummaryDTO.createFromCall(call);
 
     }
