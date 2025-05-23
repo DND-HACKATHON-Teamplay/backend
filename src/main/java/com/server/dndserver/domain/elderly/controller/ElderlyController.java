@@ -1,12 +1,35 @@
 package com.server.dndserver.domain.elderly.controller;
 
+import com.server.dndserver.domain.elderly.domain.Elderly;
+import com.server.dndserver.domain.elderly.dto.ElderlyRegisterRequest;
+import com.server.dndserver.domain.elderly.service.ElderlyService;
+import com.server.dndserver.domain.member.domain.Member;
+import com.server.dndserver.global.annotation.AuthUser;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/v1/elderly")
 @RequiredArgsConstructor
 public class ElderlyController {
+    private final ElderlyService elderlyService;
 
+    @PostMapping
+    @Tag(name ="어르신 API")
+    @Operation(summary = "어르신의 정보를 수정합니다, JWT accessToken이 필요합니다.")
+    public ResponseEntity<?> registerElderly(
+            @AuthUser Member member, @RequestBody ElderlyRegisterRequest request) {
+
+        Elderly elderly = elderlyService.registerElderly(member, request);
+
+        return ResponseEntity.ok(Map.of("elderlyId", elderly.getId()));
+    }
 }
