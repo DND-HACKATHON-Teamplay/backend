@@ -1,5 +1,6 @@
 package com.server.dndserver.domain.conversation.controller;
 
+import com.server.dndserver.domain.call.dto.ConversationDTO;
 import com.server.dndserver.domain.conversation.domain.Conversation;
 import com.server.dndserver.domain.conversation.service.ConversationService;
 import com.server.dndserver.domain.member.domain.Member;
@@ -27,7 +28,7 @@ public class ConversationController {
     @GetMapping("/by-call-date")
     @Tag(name = "대화 API")
     @Operation(summary = "날짜별 대화를 가져옵니다. JWT accessToken이 필요합니다.")
-    public ResponseEntity<List<Conversation>> getConversationsByCallDate(
+    public ResponseEntity<List<ConversationDTO>> getConversationsByCallDate(
             @AuthUser Member member,
             @RequestParam("date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
         return ResponseEntity.ok(conversationService.getConversationsByCallDate(member, date));
