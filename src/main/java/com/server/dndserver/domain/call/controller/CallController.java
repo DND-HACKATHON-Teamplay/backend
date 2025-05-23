@@ -1,5 +1,6 @@
 package com.server.dndserver.domain.call.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.server.dndserver.domain.call.dto.CallRequestDTO;
 import com.server.dndserver.domain.call.dto.CallResponseDTO;
 import com.server.dndserver.domain.call.service.CallService;
@@ -32,13 +33,14 @@ public class CallController {
         return callService.getMonthlyEvaluationByMember(member.getId(), year, month);
     }
 
-   /* @PostMapping
+   @PostMapping
+   @Tag(name = "전화 API")
+   @Operation(summary = "어르신의 전화 내용을 기록합니다.")
     public ResponseEntity<CallResponseDTO> createCall(
-            @RequestBody CallRequestDTO req) {
+            @RequestBody CallRequestDTO content) throws JsonProcessingException {
 
-        Long id = callService.saveCall(req);
-        return ResponseEntity.ok(new IdResponse(id));
+        return ResponseEntity.ok(callService.saveCall(content));
     }
-*/
+
 
 }

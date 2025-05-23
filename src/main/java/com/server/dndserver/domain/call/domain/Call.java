@@ -36,6 +36,12 @@ public class Call extends BaseEntity {
             orphanRemoval = true)
     private final List<Conversation> conversations = new ArrayList<>();
 
+    public void updateStatus(HealthStatus healthStatus, Long sleepTime, MindStatus mindStatus) {
+        this.healthStatus = healthStatus;
+        this.sleepTime = sleepTime;
+        this.mindStatus = mindStatus;
+    }
+
     public void addConversation(Conversation conv) {
         conversations.add(conv);
         conv.setCall(this);
