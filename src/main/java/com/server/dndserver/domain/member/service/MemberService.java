@@ -1,5 +1,7 @@
 package com.server.dndserver.domain.member.service;
 
+import com.server.dndserver.domain.call.repository.CallRepository;
+import com.server.dndserver.domain.elderly.domain.Elderly;
 import com.server.dndserver.domain.elderly.repository.ElderlyRepository;
 import com.server.dndserver.domain.elderly.service.ElderlyService;
 import com.server.dndserver.domain.member.domain.Member;
@@ -12,11 +14,14 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class MemberService {
     private final MemberRepository memberRepository;
     private final ElderlyRepository elderlyRepository;
+    private final CallRepository callRepository;
 
     @Transactional(readOnly = true)
     public Member getMemberById(Long id) {
@@ -37,7 +42,13 @@ public class MemberService {
 
     @Transactional
     public void deleteMember(Member member) {
-        elderlyRepository.deleteAllByMember(member);
+        List<Elderly> elderlyList = elderlyRepository.findAllByMember(member);
+
+        for (Elderly elderly : elderlyList) {
+            callRepository.deleteAllByElderly(elderly);
+        }
+
+        elderlyRepository.deleteAll(elderlyList);
         memberRepository.delete(member);
     }
 

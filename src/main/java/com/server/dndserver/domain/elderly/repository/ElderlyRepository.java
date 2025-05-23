@@ -13,4 +13,7 @@ public interface ElderlyRepository extends JpaRepository<Elderly, Long> {
     Optional<Elderly> findByPhoneNumber(String phoneNumber);
 
     void deleteAllByMember(Member member);
+
+    List<Elderly> findAllByMember(Member member);
+
 }

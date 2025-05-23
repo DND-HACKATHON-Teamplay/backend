@@ -1,6 +1,7 @@
 package com.server.dndserver.domain.call.repository;
 
 import com.server.dndserver.domain.call.domain.Call;
+import com.server.dndserver.domain.elderly.domain.Elderly;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -22,4 +23,6 @@ public interface CallRepository extends JpaRepository<Call, Long> {
             Long elderlyId,
             LocalDateTime start,
             LocalDateTime end);
+
+    void deleteAllByElderly(Elderly elderly);
 }
