@@ -4,6 +4,8 @@ import com.server.dndserver.domain.call.dto.SummaryDTO;
 import com.server.dndserver.domain.call.service.SummaryService;
 import com.server.dndserver.domain.member.domain.Member;
 import com.server.dndserver.global.annotation.AuthUser;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -13,11 +15,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/v1")
+@RequestMapping("/api/v1/call")
 @RequiredArgsConstructor
 public class SummaryController {
     private final SummaryService summaryService;
-    @PostMapping("call/{callId}/summary")
+    @PostMapping("{callId}/summary")
+    @Tag(name ="요약 조회 API")
+    @Operation(summary = "디테일 뷰에서 대화 내용 요약과 전체 대화를 조회하는 API")
     public ResponseEntity<Object> getSummary(@RequestParam Long conversationId){
         SummaryDTO summaryDTO = summaryService.getSummary(conversationId);
         return ResponseEntity.ok(summaryDTO);
