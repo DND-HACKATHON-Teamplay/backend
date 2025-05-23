@@ -29,7 +29,8 @@ public class Elderly extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private Gender gender;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_id", unique = true)
     private Member member;
 
     @Enumerated(EnumType.STRING)
