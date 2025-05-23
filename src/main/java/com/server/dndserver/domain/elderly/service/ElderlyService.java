@@ -35,6 +35,17 @@ public class ElderlyService {
         return elderlyRepository.save(elderly);
     }
 
+    public void updateElderly(Member member, ElderlyRegisterRequest request) {
+        Elderly elderly = elderlyRepository.findByMemberId(member.getId()).orElseThrow(() -> new BusinessException(ErrorCode.NOT_ELDERLY_PERSONNEL));
+        elderly.setName(request.name());
+        elderly.setBirthDate(request.birthDate());
+        elderly.setGender(request.gender());
+        elderly.setPhoneNumber(request.phoneNumber());
+        elderly.setRelationshipWithGuardian(request.relationship());
+        elderly.setTimeToCall(request.timeToCall());
+        elderlyRepository.save(elderly);
+    }
+  
     @Transactional(readOnly = true)
     public ElderlyResponse getElderlyById(Long id) {
         Elderly elderly = elderlyRepository.findByMemberId(id).orElseThrow(() -> new BusinessException(ErrorCode.NOT_ELDERLY_PERSONNEL));

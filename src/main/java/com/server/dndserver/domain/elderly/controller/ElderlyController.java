@@ -34,6 +34,13 @@ public class ElderlyController {
         return ResponseEntity.ok(Map.of("elderlyId", elderly.getId()));
     }
 
+
+    @PatchMapping
+    public ResponseEntity<Object> updateElderly(@AuthUser Member member, @RequestBody ElderlyRegisterRequest request){
+        elderlyService.updateElderly(member, request);
+        return ResponseEntity.ok("어르신 정보 수정에 성공했습니다.");
+    }
+
     @GetMapping
     @Tag(name ="어르신 API")
     @Operation(summary = "어르신의 정보를 받아옵니다. 요청 헤더에 포함된 JWT accessToken이 필요합니다.")
