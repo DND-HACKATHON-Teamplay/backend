@@ -47,7 +47,7 @@ public class CallController {
 
     @GetMapping("/daily")
     @Tag(name = "전화 API")
-    @Operation(summary = "어르신의 날마다의 상태를 반환합니다. JWT accessToken이 필요합니다.")
+    @Operation(summary = "어르신의 날마다의 상태를 반환합니다. 요청 헤더에 포함된 JWT accessToken이 필요합니다.")
     public CallStatusDTO getDailyCall(
             @AuthUser Member member,
             @RequestParam
