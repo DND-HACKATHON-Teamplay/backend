@@ -14,6 +14,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@Table(name = "call_log")
 public class Call extends BaseEntity {
 
     @Id
