@@ -16,6 +16,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Map;
 
+import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
 @RestController
 @RequestMapping("/api/v1/elderly")
 @RequiredArgsConstructor
