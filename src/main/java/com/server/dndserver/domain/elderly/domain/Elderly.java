@@ -6,6 +6,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 
 @Getter
 @Entity
@@ -32,4 +33,6 @@ public class Elderly extends BaseEntity {
 
     @Enumerated(EnumType.STRING)
     private Relationship relationshipWithGuardian;
+
+    private LocalTime timeToCall;
 }
