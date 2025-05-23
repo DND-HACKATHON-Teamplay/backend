@@ -7,6 +7,9 @@ import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 
+import org.springframework.stereotype.Repository;
+
+@Repository
 public interface CallRepository extends JpaRepository<Call, Long> {
 
     @Query("SELECT c FROM Call c WHERE c.elderly.id = :elderlyId AND FUNCTION('YEAR', c.createdDate) = :year AND FUNCTION('MONTH', c.createdDate) = :month")
