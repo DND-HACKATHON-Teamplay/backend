@@ -23,6 +23,9 @@ public enum ErrorCode {
     RT_NOT_FOUND(HttpStatus.UNAUTHORIZED, "RT가 비어있습니다"),
     INVALID_TOKEN(HttpStatus.UNAUTHORIZED, "유효하지 않는 토큰입니다."),
 
+    // 어르신
+    NOT_ELDERLY_PERSONNEL(HttpStatus.BAD_REQUEST, "어르신이 존재하지 않습니다."),
+
 
     //회원
     MEMBER_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 회원을 찾을 수 없습니다"),
