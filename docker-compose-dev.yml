@@ -31,5 +31,5 @@ services:
       - dnd
 
 networks:
-  backya:
+  dnd:
     driver: bridge
