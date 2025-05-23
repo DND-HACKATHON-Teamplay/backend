@@ -1,9 +1,12 @@
 package com.server.dndserver.domain.elderly.service;
 
 import com.server.dndserver.domain.elderly.domain.Elderly;
+import com.server.dndserver.domain.elderly.dto.ElderlyResponse;
 import com.server.dndserver.domain.elderly.repository.ElderlyRepository;
 import com.server.dndserver.domain.elderly.dto.ElderlyRegisterRequest;
 import com.server.dndserver.domain.member.domain.Member;
+import com.server.dndserver.global.error.exception.BusinessException;
+import com.server.dndserver.global.error.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,5 +33,11 @@ public class ElderlyService {
         member.completeFirstLogin();
 
         return elderlyRepository.save(elderly);
+    }
+
+    @Transactional(readOnly = true)
+    public ElderlyResponse getElderlyById(Long id) {
+        Elderly elderly = elderlyRepository.findById(id).orElseThrow(() -> new BusinessException(ErrorCode.NOT_ELDERLY_PERSONNEL));
+        return new ElderlyResponse(elderly.getId(), elderly.getName(), elderly.getBirthDate(), elderly.getPhoneNumber(), elderly.getGender(), elderly.getMember().getId(), elderly.getRelationshipWithGuardian(), elderly.getTimeToCall());
     }
 }

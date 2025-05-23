@@ -9,10 +9,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
 
@@ -28,12 +25,19 @@ public class ElderlyController {
 
     @PostMapping
     @Tag(name ="어르신 API")
-    @Operation(summary = "어르신의 정보를 수정합니다, JWT accessToken이 필요합니다.")
+    @Operation(summary = "어르신의 정보를 생성합니다, JWT accessToken이 필요합니다.")
     public ResponseEntity<?> registerElderly(
             @AuthUser Member member, @RequestBody ElderlyRegisterRequest request) {
 
         Elderly elderly = elderlyService.registerElderly(member, request);
 
         return ResponseEntity.ok(Map.of("elderlyId", elderly.getId()));
+    }
+
+    @GetMapping
+    @Tag(name ="어르신 API")
+    @Operation(summary = "어르신의 정보를 받아옵니다. JWT accessToken이 필요합니다.")
+    public ResponseEntity<?> getElderly(@AuthUser Member member) {
+        return ResponseEntity.ok(elderlyService.getElderlyById(member.getId()));
     }
 }
