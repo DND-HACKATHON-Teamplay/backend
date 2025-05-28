@@ -34,4 +34,4 @@ jobs:
             ./gradlew clean build
             docker rm -f dnd-server-dev --force
             docker rmi dnd-server-dev
-            docker-compose -f docker-compose-dev.yml -p dnd-server-dev up --build -d
+            docker compose -f docker-compose-dev.yml -p dnd-server-dev up --build -d
